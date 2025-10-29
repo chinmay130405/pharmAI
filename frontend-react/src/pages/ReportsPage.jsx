@@ -44,7 +44,7 @@ export default function ReportsPage() {
       await axios.delete(`${API_BASE}/api/reports/${reportId}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
-      setReports(reports.filter((r) => r.id !== reportId));
+      setReports(reports.filter((r) => r._id !== reportId));
     } catch (err) {
       setError(err.response?.data?.detail || 'Failed to delete report');
     }
@@ -110,7 +110,7 @@ export default function ReportsPage() {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {reports.map((report) => (
               <div
-                key={report.id}
+                key={report._id}
                 className="bg-white rounded-xl shadow-card border border-gray-200 hover:shadow-lg transition-all overflow-hidden group"
               >
                 <div className="p-6">
@@ -134,7 +134,7 @@ export default function ReportsPage() {
                   {/* Actions */}
                   <div className="flex gap-3">
                     <button
-                      onClick={() => handleView(report.id)}
+                      onClick={() => handleView(report._id)}
                       className="flex-1 py-2 px-4 bg-pharma-100 text-pharma-700 rounded-lg hover:bg-pharma-200 transition font-medium flex items-center justify-center gap-2 text-sm"
                     >
                       <Eye size={16} />
@@ -148,7 +148,7 @@ export default function ReportsPage() {
                       Download
                     </button>
                     <button
-                      onClick={() => handleDelete(report.id)}
+                      onClick={() => handleDelete(report._id)}
                       className="py-2 px-4 bg-red-100 text-red-700 rounded-lg hover:bg-red-200 transition"
                     >
                       <Trash2 size={16} />
