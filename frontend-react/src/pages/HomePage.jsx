@@ -1,6 +1,8 @@
 import { useState } from 'react';
-import { Search, Loader, Download, Share2, TrendingUp, Zap, Calendar, FileText, Beaker, DollarSign, Pill, Lightbulb, BarChart3, Sparkles } from 'lucide-react';
+import { Search, Loader, Download, Share2, TrendingUp, Zap, Calendar, FileText, Beaker, DollarSign, Pill, Lightbulb, BarChart3, Sparkles, Save, Check } from 'lucide-react';
 import { BarChart, Bar, LineChart, Line, PieChart, Pie, Cell, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, AreaChart, Area } from 'recharts';
+import { useAuth } from '../context/AuthContext';
+import axios from 'axios';
 import { apiService } from '../utils/apiService';
 import { formatCurrency, formatPercent, formatDate, formatMetric } from '../utils/formatters';
 import InsightCard from '../components/InsightCard';
@@ -8,11 +10,16 @@ import LoadingSpinner from '../components/LoadingSpinner';
 import Alert from '../components/Alert';
 
 export default function HomePage() {
+  const { isAuthenticated, token } = useAuth();
   const [moleculeName, setMoleculeName] = useState('');
   const [loading, setLoading] = useState(false);
   const [data, setData] = useState(null);
   const [error, setError] = useState(null);
   const [activeTab, setActiveTab] = useState('overview');
+  const [saving, setSaving] = useState(false);
+  const [saveSuccess, setSaveSuccess] = useState(false);
+
+  const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:8000';
 
   const handleSearch = async (e) => {
     e.preventDefault();
@@ -41,6 +48,41 @@ export default function HomePage() {
     link.href = url;
     link.download = `${data.molecule}_analysis.json`;
     link.click();
+  };
+
+  const handleSaveReport = async () => {
+    if (!isAuthenticated) {
+      setError('Please log in to save reports');
+      return;
+    }
+
+    if (!data) return;
+
+    setSaving(true);
+    setSaveSuccess(false);
+    
+    try {
+      await axios.post(
+        `${API_BASE}/api/reports/save`,
+        {
+          molecule_name: data.molecule,
+          data: data,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            'Content-Type': 'application/json',
+          },
+        }
+      );
+      
+      setSaveSuccess(true);
+      setTimeout(() => setSaveSuccess(false), 3000);
+    } catch (err) {
+      setError(err.response?.data?.detail || 'Failed to save report');
+    } finally {
+      setSaving(false);
+    }
   };
 
   return (
@@ -151,6 +193,35 @@ export default function HomePage() {
                   >
                     <Download size={18} />
                     Download
+                  </button>
+                  <button
+                    onClick={handleSaveReport}
+                    disabled={saving || !isAuthenticated}
+                    className={`px-4 py-2 rounded-lg transition-all flex items-center gap-2 font-medium ${
+                      saveSuccess
+                        ? 'bg-green-100 text-green-700'
+                        : isAuthenticated
+                        ? 'bg-pharma-100 hover:bg-pharma-200 text-pharma-700'
+                        : 'bg-gray-100 text-gray-400 cursor-not-allowed'
+                    }`}
+                    title={!isAuthenticated ? 'Log in to save reports' : 'Save to your account'}
+                  >
+                    {saving ? (
+                      <>
+                        <Loader size={18} className="animate-spin" />
+                        Saving...
+                      </>
+                    ) : saveSuccess ? (
+                      <>
+                        <Check size={18} />
+                        Saved!
+                      </>
+                    ) : (
+                      <>
+                        <Save size={18} />
+                        Save Report
+                      </>
+                    )}
                   </button>
                 </div>
               </div>
