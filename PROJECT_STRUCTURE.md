@@ -29,10 +29,27 @@ pharma-agent-ai/
 │       ├── __init__.py
 │       └── groq_client.py                # ✅ Groq LLM integration
 │
-└── frontend/                             # 🎨 Streamlit Dashboard
-    ├── app.py                            # ✅ Main Streamlit app (3 pages)
-    ├── requirements.txt                  # ✅ Frontend dependencies
-    └── pages/                            # 📄 Multi-page app support
+└── frontend-react/                       # ⚛️ React Dashboard
+    ├── src/
+    │   ├── App.jsx                       # Main React component
+    │   ├── pages/                        # Page components
+    │   │   ├── LoginPage.jsx             # Auth & registration
+    │   │   ├── AnalyzePage.jsx           # Molecule analysis
+    │   │   └── ReportsPage.jsx           # User reports dashboard
+    │   ├── components/                   # Reusable components
+    │   │   ├── Navbar.jsx                # Navigation header
+    │   │   ├── SearchBar.jsx             # Molecule search
+    │   │   └── ReportCard.jsx            # Report display
+    │   ├── context/                      # State management
+    │   │   └── AuthContext.jsx           # Global auth state
+    │   ├── services/                     # API integration
+    │   │   └── api.js                    # Axios API client
+    │   ├── index.css                     # Tailwind styles
+    │   └── main.jsx                      # React entry point
+    ├── package.json                      # Dependencies (Vite, Tailwind, etc)
+    ├── vite.config.js                    # Vite bundler config
+    ├── index.html                        # HTML template
+    └── .env.example                      # Environment template
 ```
 
 ---
@@ -42,10 +59,11 @@ pharma-agent-ai/
 | Category | Count | Details |
 |----------|-------|---------|
 | **Backend Files** | 8 | 1 main app + 5 agents + 1 util + 1 init |
-| **Frontend Files** | 1 | Main Streamlit dashboard |
-| **Configuration** | 3 | requirements (2) + .env files |
-| **Documentation** | 6 | README, guides, setup, overview |
+| **Frontend Files** | 8+ | React components (Auth, Analysis, Reports) |
+| **Configuration** | 3 | 1 backend requirements + .env files |
+| **Documentation** | 40+ | README, guides, setup, overview |
 | **Total Python Code** | ~2,500 lines | Well-documented, modular |
+| **Total React Code** | ~1,500 lines | Vite + Tailwind CSS + Axios |
 | **API Endpoints** | 25+ | Comprehensive coverage |
 | **Agent Types** | 5 | Market, Clinical, Patent, Web, Report |
 | **Mock Molecules** | 3 | aspirin, metformin, doxycycline |
@@ -56,17 +74,19 @@ pharma-agent-ai/
 ## 🔄 Data Flow
 
 ```
-User Browser (Streamlit)
+User Browser (React - Port 3002)
         │
-        ↓ HTTP Requests
-    Frontend (app.py)
+        ↓ HTTP Requests + JWT Token
+    Frontend (React App)
         │
+        ├→ /api/auth/register
+        ├→ /api/auth/login
         ├→ /query_molecule
         ├→ /get_trends
-        ├→ /generate_report
+        ├→ /api/reports/user-reports
         │
         ↓ (Rest calls)
-    Backend (FastAPI main.py)
+    Backend (FastAPI main.py - Port 8000)
         │
         ├→ Master Agent (orchestration)
         │   │
@@ -75,6 +95,8 @@ User Browser (Streamlit)
         │   ├→ Patent Agent (📜 patents)
         │   ├→ Web Intel (🌐 trends)
         │   └→ Report Agent (📄 reports)
+        │
+        ├→ MongoDB (👤 users, 📊 reports)
         │
         ├→ Groq Client (🤖 AI)
         │   └→ LLM API (Groq)
@@ -95,12 +117,18 @@ User Browser (Streamlit)
 - **ReportLab** 4.0.7 - PDF generation
 - **python-dotenv** 1.0.0 - Env management
 - **requests** 2.31.0 - HTTP client
+- **MongoDB** 4.5.1 - Database driver
+- **bcrypt** 5.0.0 - Password hashing
+- **PyJWT** 2.8.1 - JWT token management
 
-### Frontend
-- **Streamlit** 1.28.1 - UI framework
-- **Pandas** 2.1.3 - Data processing
-- **Plotly** 5.18.0 - Interactive charts
-- **requests** 2.31.0 - API calls
+### Frontend (React)
+- **React** 18.x - UI library
+- **Vite** 5.x - Build tool & dev server
+- **Tailwind CSS** 3.x - Styling
+- **Recharts** 2.x - Charts & visualization
+- **Lucide React** - Icon library
+- **Axios** 1.x - HTTP client
+- **React Router** 6.x - Navigation
 
 ---
 

@@ -31,8 +31,8 @@ pip install -r requirements.txt
 
 **Frontend**:
 ```bash
-# In frontend/ folder
-pip install -r requirements.txt
+# In frontend-react/ folder
+npm install
 ```
 
 ---
@@ -47,30 +47,30 @@ python main.py
 
 ### Terminal 2: Frontend
 ```bash
-cd frontend
-streamlit run app.py
+cd frontend-react
+npm run dev
 ```
 
 ---
 
 ## 🌐 Access
 
-- **Frontend**: http://localhost:8501
+- **Frontend**: http://localhost:3002
 - **API**: http://localhost:8000
 
 ---
 
 ## 💡 Try These
 
-### Option A: Home Page
+### Option A: Login
+1. Register with email and password
+2. Create an account for report saving
+
+### Option B: Analyze Molecule
 1. Type "aspirin"
 2. Click Analyze
 3. See market, trials, patents, AI insights
-
-### Option B: Trends
-1. Go to Trends tab
-2. Click Refresh
-3. Explore trending areas
+4. Save report to account
 
 ### Option C: API Testing
 ```bash

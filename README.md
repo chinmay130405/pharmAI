@@ -36,7 +36,7 @@ This project combines multiple intelligent agents with Groq's powerful LLM to an
 
 3. **Generating AI Insights** using Groq's powerful LLMs to synthesize complex data into actionable recommendations
 
-4. **Providing Interactive UI** through Streamlit for easy exploration and report generation
+4. **Providing Interactive UI** through React for easy exploration and report generation
 
 ---
 
@@ -47,12 +47,16 @@ pharma-agent-ai/
 │
 ├── backend/
 │   ├── main.py                          # FastAPI application entry point
+│   ├── database.py                      # MongoDB connection
+│   ├── auth.py                          # Authentication utilities
+│   ├── schemas.py                       # Pydantic models
+│   ├── routes_auth.py                   # Auth endpoints
+│   ├── routes_reports.py                # Report endpoints
 │   ├── requirements.txt                 # Python dependencies
-│   ├── .env                             # Environment variables (GROQ_API_KEY)
+│   ├── .env                             # Environment variables
 │   ├── .env.example                     # Example .env file
 │   │
 │   ├── agents/
-│   │   ├── __init__.py
 │   │   ├── master_agent.py              # Orchestrates all agents
 │   │   ├── iqvia_agent.py               # Market intelligence agent
 │   │   ├── clinical_agent.py            # Clinical trials agent
@@ -61,13 +65,18 @@ pharma-agent-ai/
 │   │   └── report_agent.py              # Report generation agent
 │   │
 │   └── utils/
-│       ├── __init__.py
 │       └── groq_client.py               # Groq API wrapper
 │
-├── frontend/
-│   ├── app.py                           # Main Streamlit application
-│   ├── requirements.txt                 # Frontend dependencies
-│   └── pages/                           # (Optional) For multi-page apps
+├── frontend-react/
+│   ├── src/
+│   │   ├── App.jsx                      # Main React component
+│   │   ├── pages/                       # Page components
+│   │   ├── components/                  # Reusable components
+│   │   ├── context/                     # Auth context
+│   │   └── index.css                    # Styles
+│   ├── package.json                     # Frontend dependencies
+│   ├── vite.config.js                   # Vite configuration
+│   └── index.html                       # HTML entry point
 │
 └── README.md                            # This file
 
@@ -146,14 +155,14 @@ source venv/bin/activate
 pip install -r requirements.txt
 ```
 
-### Step 3: Set Up Frontend
+### Step 3: Set Up React Frontend
 
 ```bash
-# Navigate to frontend directory
-cd ../frontend
+# Navigate to frontend-react directory
+cd ../frontend-react
 
 # Install dependencies
-pip install -r requirements.txt
+npm install
 ```
 
 ### Step 4: Get Groq API Key
@@ -219,25 +228,23 @@ INFO:     Application startup complete
 ### Terminal 2: Start Frontend
 
 ```bash
-# Navigate to frontend directory
-cd frontend
+# Navigate to frontend-react directory
+cd frontend-react
 
-# Run Streamlit app
-streamlit run app.py
+# Start development server
+npm run dev
 ```
 
 Expected output:
 ```
-You can now view your Streamlit app in your browser.
-
-Local URL: http://localhost:8501
-Network URL: http://your-ip:8501
+➜  Local:   http://localhost:3002/
+➜  press h to show help
 ```
 
 ### Access the Application
 
 Open your browser and navigate to:
-- **Frontend**: http://localhost:8501
+- **Frontend**: http://localhost:3002
 - **Backend API**: http://localhost:8000
 - **API Docs**: http://localhost:8000/docs (Swagger UI)
 
@@ -368,29 +375,36 @@ Content-Type: application/json
 
 ---
 
-## 🎨 Frontend Guide
+## 🎨 Frontend Guide (React)
 
-### Home Page 🏠
-1. **Enter a molecule name** in the search box
-2. **Click "Analyze"** or use quick suggestion buttons
-3. **View comprehensive analysis** in tabs:
-   - 📊 Market: Market size, growth, competitors, regional data
-   - 🏥 Trials: Clinical trial details and enrollment
-   - 📜 Patents: Patent portfolio and FTO analysis
-   - 🌐 Web: Recent publications and scientific trends
-   - 💡 Insights: AI-generated insights and recommendations
-4. **Download reports** as JSON
+### Login Page 🔐
+1. **Create an account** or **continue as guest**
+2. Register with name, email, and password
+3. JWT token automatically stored for 24 hours
+4. Access saved reports from your account
 
-### Trends Page 📈
-- **Market Trends**: Top therapeutic areas by market size and growth
-- **Clinical Trends**: Most actively researched conditions
-- **Web Trends**: Trending topics in scientific literature
-- **AI Summary**: Analysis of emerging opportunities
+### Analyze Page 🔬
+1. **Search for a molecule** (e.g., "Aspirin", "Metformin")
+2. **View AI-powered analysis** across multiple dimensions:
+   - 📊 Market Data
+   - 🏥 Clinical Trials
+   - 📜 Patents & FTO
+   - 🌐 Web Intelligence
+   - 💡 AI Insights
+3. **Generate and save reports** to your account
 
-### Reports Page 📊
-- **View all saved reports** with metadata
-- **Download reports** (JSON format)
-- **Track analysis history**
+### Reports Page �
+- **View all saved reports** (logged-in users only)
+- **Access report details**
+- **Download as JSON**
+- **Delete reports** you own
+
+### Features ✨
+- 🔐 User authentication with JWT
+- 💾 Save reports to MongoDB
+- 🎨 Modern UI with Tailwind CSS
+- 📱 Fully responsive design
+- ⚡ Real-time data loading
 
 ---
 
@@ -422,7 +436,7 @@ Content-Type: application/json
 ### Data Flow
 
 ```
-Streamlit Frontend
+React Frontend (Port 3002)
        │
        ▼
    FastAPI Backend
