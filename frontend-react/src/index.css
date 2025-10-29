@@ -1,0 +1,46 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    @apply scroll-smooth;
+  }
+  
+  body {
+    @apply bg-gray-50;
+  }
+}
+
+@layer components {
+  .btn-primary {
+    @apply bg-pharma-600 hover:bg-pharma-700 text-white px-4 py-2 rounded-lg transition duration-200 font-medium disabled:bg-gray-400 disabled:cursor-not-allowed;
+  }
+
+  .btn-secondary {
+    @apply bg-white border-2 border-pharma-300 text-pharma-600 hover:bg-pharma-50 px-4 py-2 rounded-lg transition duration-200 font-medium;
+  }
+
+  .card {
+    @apply bg-white rounded-xl shadow-lg p-6 transition hover:shadow-xl;
+  }
+
+  .card-accent {
+    @apply border-l-4 border-pharma-500;
+  }
+
+  .section-title {
+    @apply text-2xl font-bold text-gray-900 mb-4;
+  }
+}
+
+@layer utilities {
+  .animation-delay-2000 {
+    animation-delay: 2000ms;
+  }
+
+  .animation-delay-4000 {
+    animation-delay: 4000ms;
+  }
+}
+
